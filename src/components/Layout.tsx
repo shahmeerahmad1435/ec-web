@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 
 type LayoutProps = {
   children: ReactNode;
-  title: ReactNode;
+  title: Text;
 };
 export default function Layout({ title, children }: LayoutProps) {
   return (
