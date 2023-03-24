@@ -19,7 +19,7 @@ export default function Layout({ title, children }: LayoutProps) {
         <header>
           <nav className="flex px-4 h-12 items-center justify-between shadow-md">
             <Link href="/" legacyBehavior>
-              <a className="font-bold text-lg">Shahmeer Ahmad</a>
+              <a className="font-bold text-lg">Shahmeer</a>
             </Link>
             <div>
               <Link href="/cart" legacyBehavior>
