@@ -1,14 +1,23 @@
 import Layout from '@/components/Layout'
 import data from '@/utils/data';
+import { Store } from '@/utils/Store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useContext } from 'react'
 
 export default function ProductScreen() {
+
+
     const { query } = useRouter();
     const { slug } = query
     const product = data.product.find(x => x.slug == slug)
+    if (!product) {
+        return <div>Product Not Found</div>
+    }
+    const addToCartHandler = () => {
+
+    }
     return (
         <Layout title={product?.name}>
             <div className='py-2 '>
@@ -44,7 +53,7 @@ export default function ProductScreen() {
                             <div>Status</div>
                             <div>{product?.countInStock! > 0 ? "In Stock" : "Unavailable"}</div>
                         </div>
-                        <button className='primary-button w-full'>Add to Cart</button>
+                        <button className='primary-button w-full' onClick={addToCartHandler}>Add to Cart</button>
                     </div>
                 </div>
             </div>
