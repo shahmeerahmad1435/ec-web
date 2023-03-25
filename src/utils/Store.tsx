@@ -1,49 +1,72 @@
-import { useReducer, useContext, createContext } from "react"
-import type { ReactNode } from "react"
-import data from "./data";
-export const Store = createContext(undefined);
+import { createContext, Dispatch, useReducer } from 'react';
+
+type ActionMap<M extends { [index: string]: any }> = {
+  [Key in keyof M]: M[Key] extends undefined
+    ? {
+        type: Key;
+      }
+    : {
+        type: Key;
+        payload: M[Key];
+      };
+};
+
+export enum Types {
+  Add = 'ADD_PRODUCT',
+}
+
+// ShoppingCart
+
+type ShoppingCartPayload = {
+  [Types.Add]: undefined;
+};
+
+export type ShoppingCartActions =
+  ActionMap<ShoppingCartPayload>[keyof ActionMap<ShoppingCartPayload>];
+
+export const shoppingCartReducer = (
+  state: number,
+  action: ShoppingCartActions
+) => {
+  switch (action.type) {
+    case Types.Add:
+      return state + 1;
+    default:
+      return state;
+  }
+};
+
+type InitialStateType = {
+  shoppingCart: number;
+};
+
 const initialState = {
-    cart: { cartItems: [] }
-}
-// export type PayLoad = typeof data.product
-export type Action = { type: 'CART_ADD_ITEM', payload: [] }
-export type State = typeof initialState
-export type Dispatch = (action: Action) => void
-export type Product = {
-    slug: string,
-    name: string
-}
+  shoppingCart: 0,
+};
 
+const AppContext = createContext<{
+  state: InitialStateType;
+  dispatch: Dispatch<ShoppingCartActions>;
+}>({
+  state: initialState,
+  dispatch: () => null,
+});
 
+const mainReducer = (
+  { shoppingCart }: InitialStateType,
+  action: ShoppingCartActions
+) => ({
+  shoppingCart: shoppingCartReducer(shoppingCart, action),
+});
 
-// function reducer(state: State, action: Action) {
-//     switch (action.type) {
-//         case 'CART_ADD_ITEM':
-//             const newItem = action.payload;
-//             const existItem = state.cart.cartItems.find((item: Product) => item.slug === newItem.slug)
-//             const cartItems = existItem ? state.cart.cartItems.map((item: Product) => item.name === existItem.name ? newItem : item) : [...state.cart.cartItem, newItem]
-//             return { ...state, cart: { ...state.cart, cartItems } }
+const AppProvider: any = ({ children }: any) => {
+  const [state, dispatch] = useReducer(mainReducer, initialState);
 
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
 
-//         default:
-//             return state;
-
-//     }
-// }
-
-// export function StoreProvider({ children }: any) {
-//     const [state, dispatch] = useReducer(reducer, initialState)
-//     const value = { state, dispatch }
-//     return <Store.Provider value={value}>
-//         {children}
-//     </Store.Provider>
-// }
-
-
-
-
-
-
-
-
-
+export { AppProvider, AppContext };

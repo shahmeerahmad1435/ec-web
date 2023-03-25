@@ -1,12 +1,14 @@
+import { AppContext } from '@/utils/Store';
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 
 type LayoutProps = {
   children: ReactNode;
-  title: Text;
+  title: ReactNode;
 };
 export default function Layout({ title, children }: LayoutProps) {
+  const { state, dispatch } = useContext(AppContext);
   return (
     <>
       <Head>
@@ -23,7 +25,14 @@ export default function Layout({ title, children }: LayoutProps) {
             </Link>
             <div>
               <Link href="/cart" legacyBehavior>
-                <a className="px-2">Cart</a>
+                <a className="px-2">
+                  Cart
+                  {state.shoppingCart > 0 && (
+                    <span className="ml-1 bg-red-600 rounded-full  px-2 py-1 text-xs font-bold text-white">
+                      {state.shoppingCart}
+                    </span>
+                  )}
+                </a>
               </Link>
               <Link href="/login" legacyBehavior>
                 <a className="px-2">Login</a>
