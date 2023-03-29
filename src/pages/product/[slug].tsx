@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout';
 import data from '@/utils/data';
-import { AppContext, Types } from '@/utils/Store';
 
+import { AppContext } from '@/utils/appcontext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,17 +10,25 @@ import { useContext } from 'react';
 export default function ProductScreen() {
   const { state, dispatch } = useContext(AppContext);
   const { query } = useRouter();
+  const router = useRouter();
   const { slug } = query;
   const product = data.product.find((x) => x.slug == slug);
   if (!product) {
     return <div>Product Not Found</div>;
   }
   const addToCartHandler = () => {
-    if (state.shoppingCart >= 20) {
+    const existItem = state.cart.cartItems.find((x) => x.slug == product.slug);
+    const quantity = existItem ? existItem.quantity! + 1 : 1;
+    if (product.countInStock < quantity) {
       alert('Sorry Product out of Stock');
       return;
     }
-    dispatch({ type: Types.Add });
+
+    dispatch({
+      type: 'ADD_CART',
+      payload: { ...product, quantity },
+    });
+    router.push(`/Cart`);
   };
   return (
     <Layout title={product?.name}>
