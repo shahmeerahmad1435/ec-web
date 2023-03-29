@@ -46,7 +46,7 @@ export default function LoginScreen() {
   };
   console.log(watch('email'));
   return (
-    <Layout title="Login">
+    <Layout title="Login" >
       <form
         className="mx-auto max-w-screen-md"
         onSubmit={handleSubmit(onSubmit)}
