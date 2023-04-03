@@ -1,5 +1,5 @@
 import { AppContext } from '@/utils/appcontext';
-import { useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
@@ -50,11 +50,10 @@ export default function Layout({ title, children }: LayoutProps) {
               {status === 'loading' ? (
                 'Loading'
               ) : session?.user ? (
-                session.user.name
+                <button onClick={() => signOut()}>SignOut</button>
               ) : (
-                <Link href="/login" legacyBehavior>
-                  <a className="px-2">Login</a>
-                </Link>
+                // session.user.name
+                <button onClick={() => signIn()}>Login</button>
               )}
             </div>
           </nav>

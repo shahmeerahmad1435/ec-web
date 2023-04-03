@@ -11,12 +11,14 @@ type Inputs = {
   password: string;
 };
 export default function LoginScreen() {
-  const { data: session } = useSession();
+  const { status, data: session } = useSession();
+
   const router = useRouter();
   const { redirect } = router.query;
   useEffect(() => {
     if (session?.user) {
-      router.push(router.query || '/');
+      // router.push(router.query || '/');
+      router.push('/');
     }
   }, [router, session, redirect]);
 
@@ -30,21 +32,23 @@ export default function LoginScreen() {
     email,
     password,
   }: Inputs) => {
-    console.log(email);
     try {
-      const result = await signIn('credentails', {
-        redirect: false,
+      const result = await signIn('credentials', {
         email,
         password,
+        redirect: false,
       });
       if (result?.error) {
+        console.log('its null');
         toast.error(getError(result.error));
+      } else {
+        console.log(result);
       }
     } catch (error) {
       toast.error(getError(error));
     }
   };
-  console.log(watch('email'));
+
   return (
     <Layout title="Login">
       <form
@@ -85,7 +89,19 @@ export default function LoginScreen() {
         </div>
         <div className="mb-4">
           Don&apos;t have an account? &nbsp;
-          <Link href={`/register`}>Register</Link>
+          {status === 'loading' ? (
+            'Loading'
+          ) : session?.user ? (
+            <button>SignOut</button>
+          ) : (
+            // session.user.name
+            <button>Login</button>
+          )}
+          {/* <Link href={`/register`}>
+
+
+
+          </Link> */}
         </div>
       </form>
     </Layout>
