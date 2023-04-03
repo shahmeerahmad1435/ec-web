@@ -50,7 +50,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <Layout title="Login">
+    <Layout title="Login" >
       <form
         className="mx-auto max-w-screen-md"
         onSubmit={handleSubmit(onSubmit)}
